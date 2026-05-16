@@ -15,10 +15,12 @@ public class PacienteService {
         this.pacienteRepository = pacienteRepository;
     }
 
+    //Devuelve todos los pacientes registrados
     public List<Paciente> allPacientes() {
         return pacienteRepository.findAll();
     }
 
+    //Busca si el id del paciente existe, si no, devuelve una excepción
     public Paciente buscarPorId(Long id) {
         return pacienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
     }
@@ -28,6 +30,7 @@ public class PacienteService {
     }
 
     public void actualizarPaciente(Long id, Paciente paciente) {
+        //Primero se fija si el paciente existe para luego actualizarlo
         buscarPorId(id);
         paciente.setId(id);
         pacienteRepository.save(paciente);

@@ -15,10 +15,12 @@ public class MedicoService {
         this.medicoRepository = medicoRepository;
     }
 
+    //Devuelve todos los medicos registrados
     public List<Medico> allMedicos(){
         return medicoRepository.findAll();
     }
 
+    //Busca si el id del medico existe, si no, devuelve una excepción
     public Medico buscarPorId(Long id) {
         return medicoRepository.findById(id).orElseThrow(() -> new RuntimeException("Medico no encontrado"));
     }
@@ -28,6 +30,7 @@ public class MedicoService {
     }
 
     public void actualizarMedico(Long id, Medico medico){
+        //Primero se fija si el médico existe para luego actualizarlo
         buscarPorId(id);
         medico.setId(id);
         medicoRepository.save(medico);
