@@ -1,5 +1,6 @@
 package com.bruno.turnosapi.service;
 
+import com.bruno.turnosapi.exception.ResourceNotFoundException;
 import com.bruno.turnosapi.model.Paciente;
 import com.bruno.turnosapi.repository.PacienteRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class PacienteService {
 
     //Busca si el id del paciente existe, si no, devuelve una excepción
     public Paciente buscarPorId(Long id) {
-        return pacienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+        return pacienteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Paciente no encontrado"));
     }
 
     public Paciente guardarPaciente(Paciente paciente) {

@@ -1,5 +1,7 @@
 package com.bruno.turnosapi.service;
 
+import com.bruno.turnosapi.exception.BusinessException;
+import com.bruno.turnosapi.exception.ResourceNotFoundException;
 import com.bruno.turnosapi.model.EstadoTurno;
 import com.bruno.turnosapi.model.Turno;
 import com.bruno.turnosapi.repository.MedicoRepository;
@@ -25,15 +27,15 @@ public class TurnoService {
     public Turno crearTurno(Turno turno) {
         //Primero me fijo si tanto paciente como médico existen en mi base de datos
         Long idMedico = turno.getMedico().getId();
-        medicoRepository.findById(idMedico).orElseThrow(() -> new RuntimeException("Medico no encontrado"));
+        medicoRepository.findById(idMedico).orElseThrow(() -> new ResourceNotFoundException("Medico no encontrado"));
 
         Long idPaciente = turno.getPaciente().getId();
-        pacienteRepository.findById(idPaciente).orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+        pacienteRepository.findById(idPaciente).orElseThrow(() -> new ResourceNotFoundException("Paciente no encontrado"));
 
         //Ahora me fijo si la fecha y la hora están libres
         if (turnoRepository.existsByMedicoIdAndFechaAndHora(idMedico, turno.getFecha(), turno.getHora())) {
             //Caso ya hay un turno registrado a esa fecha y hora
-            throw new RuntimeException("Ya existe un turno en esta fecha y hora");
+            throw new BusinessException("Ya existe un turno en esta fecha y hora");
         }
 
         //Declaro el turno como pendiente
@@ -50,7 +52,7 @@ public class TurnoService {
 
     //Busca si el id del turno existe, si no, devuelve una excepción
     public Turno buscarPorId(Long id){
-        return turnoRepository.findById(id).orElseThrow(() -> new RuntimeException("Turno no encontrado"));
+        return turnoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Turno no encontrado"));
     }
 
     public void eliminarTurno(Long id){
@@ -70,7 +72,7 @@ public class TurnoService {
                     turno.setEstado(estado);
                 }
                 else {
-                    throw new RuntimeException("Estado no valido, actualmente el estado del turno se encuentra en Pendiente");
+                    throw new BusinessException("Estado no valido, actualmente el estado del turno se encuentra en Pendiente");
                 }
                 break;
 
@@ -80,15 +82,15 @@ public class TurnoService {
                     turno.setEstado(estado);
                 }
                 else {
-                    throw new RuntimeException("Estado no valido, actualmente el estado del turno se encuentra en Confirmado");
+                    throw new BusinessException("Estado no valido, actualmente el estado del turno se encuentra en Confirmado");
                 }
                 break;
 
             case COMPLETADO:
-                throw new RuntimeException("El turno ya se encuentra completado");
+                throw new BusinessException("El turno ya se encuentra completado");
 
             case CANCELADO:
-                throw new RuntimeException("El turno ya se encuentra cancelado");
+                throw new BusinessException("El turno ya se encuentra cancelado");
         }
 
         //Actualizo el estado del turno

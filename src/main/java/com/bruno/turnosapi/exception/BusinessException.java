@@ -1,0 +1,8 @@
+package com.bruno.turnosapi.exception;
+
+public class BusinessException extends  RuntimeException {
+
+    public BusinessException(String mensaje) {
+        super(mensaje);
+    }
+}
