@@ -12,8 +12,10 @@ import com.bruno.turnosapi.repository.PacienteRepository;
 import com.bruno.turnosapi.repository.TurnoRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TurnoService {
@@ -60,7 +62,7 @@ public class TurnoService {
 
     //Devuelve todos los turnos registrados
     public List<TurnoResponse> obtenerTurnos(){
-        return turnoRepository.findAll().stream().map(TurnoMapper::toResponse).collect(Collectors.toList());
+        return turnoRepository.findAll().stream().map(TurnoMapper::toResponse).toList();
     }
 
     private Turno buscarEntidadPorId(Long id){
@@ -113,5 +115,32 @@ public class TurnoService {
 
         //Actualizo el estado del turno
         turnoRepository.save(turno);
+    }
+
+    //Crea una lista con todos los horarios posibles
+    private List<LocalTime> horasDelDia(){
+        List<LocalTime> fechas = new ArrayList<>();
+        LocalTime inicio = LocalTime.of(9,0);
+        LocalTime fin = LocalTime.of(18,0);
+
+        while(!inicio.isAfter(fin)){
+            fechas.add(inicio);
+            inicio = inicio.plusMinutes(15);
+        }
+        return fechas;
+    }
+
+    //Va a devolver todos los horarios en donde el medico este disponible para un turno
+    public List<LocalTime> obtenerHorasDisponibles(Long medicoId, LocalDate fecha){
+
+        medicoRepository.findById(medicoId).orElseThrow(() -> new ResourceNotFoundException("Medico no encontrado"));
+
+        List<LocalTime> horasLibres = horasDelDia();
+
+        List<Turno> turnosOcupados = turnoRepository.findByMedicoIdAndFecha(medicoId,fecha);
+        List<LocalTime> horasOcupadas = turnosOcupados.stream().map(Turno::getHora).toList();
+
+        //Filtra entre todos los turnos posibles y en los que ya hay asignado un turno
+        return horasLibres.stream().filter(horas -> !horasOcupadas.contains(horas)).toList();
     }
 }

@@ -7,6 +7,8 @@ import com.bruno.turnosapi.service.TurnoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -47,5 +49,11 @@ public class TurnoController {
     public ResponseEntity<Void> cambiarEstado(@PathVariable Long id, @RequestBody EstadoTurno estado) {
         turnoService.cambiarEstado(estado, id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/disponibles")
+    public ResponseEntity<List<LocalTime>> obtenerHorariosDisponibles(@RequestParam Long medicoId, @RequestParam LocalDate fecha){
+        List<LocalTime> horarios = turnoService.obtenerHorasDisponibles(medicoId, fecha);
+        return ResponseEntity.ok(horarios);
     }
 }

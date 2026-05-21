@@ -9,7 +9,6 @@ import com.bruno.turnosapi.repository.MedicoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MedicoService {
@@ -22,7 +21,7 @@ public class MedicoService {
 
     //Devuelve todos los medicos registrados
     public List<MedicoResponse> allMedicos(){
-        return medicoRepository.findAll().stream().map(MedicoMapper::toResponse).collect(Collectors.toList());
+        return medicoRepository.findAll().stream().map(MedicoMapper::toResponse).toList();
     }
 
     //Busca si el id del medico existe, si no, devuelve una excepción
