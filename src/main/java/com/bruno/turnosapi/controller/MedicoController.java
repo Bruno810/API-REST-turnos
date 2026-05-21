@@ -1,6 +1,7 @@
 package com.bruno.turnosapi.controller;
 
-import com.bruno.turnosapi.model.Medico;
+import com.bruno.turnosapi.dto.MedicoRequest;
+import com.bruno.turnosapi.dto.MedicoResponse;
 import com.bruno.turnosapi.service.MedicoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,25 +19,25 @@ public class MedicoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Medico>> listarMedicos() {
-        List<Medico> medicos = medicoService.allMedicos();
+    public ResponseEntity<List<MedicoResponse>> listarMedicos() {
+        List<MedicoResponse> medicos = medicoService.allMedicos();
         return ResponseEntity.ok(medicos);
     }
 
     @PostMapping
-    public ResponseEntity<Medico> crearMedico(@RequestBody Medico medico) {
-        Medico medico1 = medicoService.guardarMedico(medico);
+    public ResponseEntity<MedicoResponse> crearMedico(@RequestBody MedicoRequest medico) {
+        MedicoResponse medico1 = medicoService.guardarMedico(medico);
         return ResponseEntity.status(201).body(medico1);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Medico> buscarMedico(@PathVariable Long id) {
-        Medico medico = medicoService.buscarPorId(id);
+    public ResponseEntity<MedicoResponse> buscarMedico(@PathVariable Long id) {
+        MedicoResponse medico = medicoService.buscarPorId(id);
         return ResponseEntity.ok(medico);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> actualizarMedico(@PathVariable Long id, @RequestBody Medico medico) {
+    public ResponseEntity<Void> actualizarMedico(@PathVariable Long id, @RequestBody MedicoRequest medico) {
         medicoService.actualizarMedico(id, medico);
         return ResponseEntity.ok().build();
     }

@@ -1,7 +1,8 @@
 package com.bruno.turnosapi.controller;
 
+import com.bruno.turnosapi.dto.TurnoRequest;
+import com.bruno.turnosapi.dto.TurnoResponse;
 import com.bruno.turnosapi.model.EstadoTurno;
-import com.bruno.turnosapi.model.Turno;
 import com.bruno.turnosapi.service.TurnoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,20 +20,20 @@ public class TurnoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Turno>> listarTurnos() {
-        List<Turno> turnos = turnoService.obtenerTurnos();
+    public ResponseEntity<List<TurnoResponse>> listarTurnos() {
+        List<TurnoResponse> turnos = turnoService.obtenerTurnos();
         return ResponseEntity.ok(turnos);
     }
 
     @PostMapping
-    public ResponseEntity<Turno> crearTurno(@RequestBody Turno turno) {
-        Turno turno1 = turnoService.crearTurno(turno);
+    public ResponseEntity<TurnoResponse> crearTurno(@RequestBody TurnoRequest turno) {
+        TurnoResponse turno1 = turnoService.crearTurno(turno);
         return ResponseEntity.status(201).body(turno1);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Turno> obtenerTurno(@PathVariable Long id) {
-        Turno turno = turnoService.buscarPorId(id);
+    public ResponseEntity<TurnoResponse> obtenerTurno(@PathVariable Long id) {
+        TurnoResponse turno = turnoService.buscarPorId(id);
         return ResponseEntity.ok(turno);
     }
 
