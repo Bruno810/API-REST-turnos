@@ -13,8 +13,16 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TurnoRequest {
-    private @NotNull Long medicoId;
-    private @NotNull Long pacienteId;
-    private @FutureOrPresent LocalDate fecha;
-    private @NotNull LocalTime hora;
+    @NotNull (message = "El Id del medico no puede estar vacío")
+    private Long medicoId;
+
+    @NotNull (message = "El Id del paciente no puede estar vacío")
+    private Long pacienteId;
+
+    @NotNull(message = "La fecha no puede estar vacía")
+    @FutureOrPresent(message = "La fecha debe ser del dia de hoy o del futuro")
+    private LocalDate fecha;
+
+    @NotNull (message = "La hora no puede estar vacía")
+    private LocalTime hora;
 }
