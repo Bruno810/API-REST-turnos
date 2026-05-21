@@ -35,12 +35,13 @@ public class PacienteService {
         return PacienteMapper.toResponse(pacienteGuardado);
     }
 
-    public void actualizarPaciente(Long id, PacienteRequest paciente) {
+    public PacienteResponse actualizarPaciente(Long id, PacienteRequest paciente) {
         //Primero se fija si el paciente existe para luego actualizarlo
         buscarPorId(id);
         Paciente paciente1 = PacienteMapper.toEntity(paciente);
         paciente1.setId(id);
-        pacienteRepository.save(paciente1);
+        Paciente guardado = pacienteRepository.save(paciente1);
+        return PacienteMapper.toResponse(guardado);
     }
 
     public void eliminarPaciente(Long id) {

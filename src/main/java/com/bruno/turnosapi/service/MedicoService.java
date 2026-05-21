@@ -35,12 +35,13 @@ public class MedicoService {
         return MedicoMapper.toResponse(medicoGuardado);
     }
 
-    public void actualizarMedico(Long id, MedicoRequest medico){
+    public MedicoResponse actualizarMedico(Long id, MedicoRequest medico){
         //Primero se fija si el médico existe para luego actualizarlo
         buscarPorId(id);
         Medico medico1 = MedicoMapper.toEntity(medico);
         medico1.setId(id);
-        medicoRepository.save(medico1);
+        Medico guardado = medicoRepository.save(medico1);
+        return  MedicoMapper.toResponse(guardado);
     }
 
     public void eliminarMedico(Long id){
