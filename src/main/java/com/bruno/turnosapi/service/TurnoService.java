@@ -32,6 +32,11 @@ public class TurnoService {
 
         Turno turno = TurnoMapper.toEntity(turnoReq);
 
+        //Agrego una cláusula para que los turnos disponibles sean cada 15 mins
+        if (turno.getHora().getMinute() % 15 != 0) {
+            throw new BusinessException("Los turnos solo se pueden agendar en intervalos de 15 minutos");
+        }
+
         //Primero me fijo si tanto paciente como médico existen en mi base de datos
         Long idMedico = turno.getMedico().getId();
         medicoRepository.findById(idMedico).orElseThrow(() -> new ResourceNotFoundException("Medico no encontrado"));
