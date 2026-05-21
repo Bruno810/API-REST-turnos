@@ -1,5 +1,7 @@
 package com.bruno.turnosapi.dto;
 
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,8 +13,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TurnoRequest {
-    private Long medicoId;
-    private Long pacienteId;
-    private LocalDate fecha;
-    private LocalTime hora;
+    private @NotNull Long medicoId;
+    private @NotNull Long pacienteId;
+    private @FutureOrPresent LocalDate fecha;
+    private @NotNull LocalTime hora;
 }

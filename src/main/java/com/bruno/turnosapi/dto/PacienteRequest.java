@@ -1,5 +1,7 @@
 package com.bruno.turnosapi.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class PacienteRequest {
-    private String nombre;
-    private String apellido;
-    private String email;
-    private String telefono;
+    private @NotBlank String nombre;
+    private @NotBlank String apellido;
+    private @Email String email;
+    private @NotBlank String telefono;
 }

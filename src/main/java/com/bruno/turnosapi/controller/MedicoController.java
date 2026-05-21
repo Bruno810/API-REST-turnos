@@ -3,6 +3,8 @@ package com.bruno.turnosapi.controller;
 import com.bruno.turnosapi.dto.MedicoRequest;
 import com.bruno.turnosapi.dto.MedicoResponse;
 import com.bruno.turnosapi.service.MedicoService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +27,9 @@ public class MedicoController {
     }
 
     @PostMapping
-    public ResponseEntity<MedicoResponse> crearMedico(@RequestBody MedicoRequest medico) {
+    public ResponseEntity<MedicoResponse> crearMedico(@Valid @RequestBody MedicoRequest medico) {
         MedicoResponse medico1 = medicoService.guardarMedico(medico);
-        return ResponseEntity.status(201).body(medico1);
+        return ResponseEntity.status(HttpStatus.CREATED).body(medico1);
     }
 
     @GetMapping("/{id}")
@@ -37,7 +39,7 @@ public class MedicoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> actualizarMedico(@PathVariable Long id, @RequestBody MedicoRequest medico) {
+    public ResponseEntity<Void> actualizarMedico(@PathVariable Long id, @Valid @RequestBody MedicoRequest medico) {
         medicoService.actualizarMedico(id, medico);
         return ResponseEntity.ok().build();
     }

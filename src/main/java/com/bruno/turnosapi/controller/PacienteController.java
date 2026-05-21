@@ -3,6 +3,8 @@ package com.bruno.turnosapi.controller;
 import com.bruno.turnosapi.dto.PacienteRequest;
 import com.bruno.turnosapi.dto.PacienteResponse;
 import com.bruno.turnosapi.service.PacienteService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +27,9 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<PacienteResponse> crearPaciente(@RequestBody PacienteRequest paciente){
+    public ResponseEntity<PacienteResponse> crearPaciente(@Valid @RequestBody PacienteRequest paciente){
         PacienteResponse paciente1 = pacienteService.guardarPaciente(paciente);
-        return ResponseEntity.status(201).body(paciente1);
+        return ResponseEntity.status(HttpStatus.CREATED).body(paciente1);
     }
 
     @GetMapping("/{id}")
@@ -37,7 +39,7 @@ public class PacienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> actualizarPaciente(@RequestBody PacienteRequest paciente, @PathVariable Long id){
+    public ResponseEntity<Void> actualizarPaciente(@Valid @RequestBody PacienteRequest paciente, @PathVariable Long id){
         pacienteService.actualizarPaciente(id, paciente);
         return ResponseEntity.ok().build();
     }

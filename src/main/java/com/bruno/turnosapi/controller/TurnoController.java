@@ -4,6 +4,8 @@ import com.bruno.turnosapi.dto.TurnoRequest;
 import com.bruno.turnosapi.dto.TurnoResponse;
 import com.bruno.turnosapi.model.EstadoTurno;
 import com.bruno.turnosapi.service.TurnoService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +30,9 @@ public class TurnoController {
     }
 
     @PostMapping
-    public ResponseEntity<TurnoResponse> crearTurno(@RequestBody TurnoRequest turno) {
+    public ResponseEntity<TurnoResponse> crearTurno(@Valid @RequestBody TurnoRequest turno) {
         TurnoResponse turno1 = turnoService.crearTurno(turno);
-        return ResponseEntity.status(201).body(turno1);
+        return ResponseEntity.status(HttpStatus.CREATED).body(turno1);
     }
 
     @GetMapping("/{id}")
