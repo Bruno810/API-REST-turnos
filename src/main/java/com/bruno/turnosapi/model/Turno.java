@@ -18,7 +18,11 @@ public class Turno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private LocalDate fecha;
+
+    @Column(nullable = false)
     private LocalTime hora;
 
     @Enumerated(EnumType.STRING)
@@ -31,6 +35,4 @@ public class Turno {
     @ManyToOne
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
-
-
 }
