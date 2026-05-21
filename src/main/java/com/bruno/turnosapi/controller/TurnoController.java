@@ -42,15 +42,16 @@ public class TurnoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarTurno(@PathVariable Long id) {
+    public ResponseEntity<String> eliminarTurno(@PathVariable Long id) {
         turnoService.eliminarTurno(id);
-        return ResponseEntity.noContent().build();
+        String mensaje = "Turno eliminado correctamente";
+        return ResponseEntity.ok(mensaje);
     }
 
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<Void> cambiarEstado(@PathVariable Long id, @RequestBody EstadoTurno estado) {
-        turnoService.cambiarEstado(estado, id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<TurnoResponse> cambiarEstado(@PathVariable Long id, @RequestBody EstadoTurno estado) {
+        TurnoResponse turnoRes = turnoService.cambiarEstado(estado, id);
+        return ResponseEntity.ok(turnoRes);
     }
 
     @GetMapping("/disponibles")

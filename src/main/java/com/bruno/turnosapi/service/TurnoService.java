@@ -80,7 +80,7 @@ public class TurnoService {
         turnoRepository.deleteById(id);
     }
 
-    public void cambiarEstado(EstadoTurno estado, Long id){
+    public TurnoResponse cambiarEstado(EstadoTurno estado, Long id){
         Turno turno = buscarEntidadPorId(id);
         EstadoTurno estadoActual = turno.getEstado();
 
@@ -114,7 +114,8 @@ public class TurnoService {
         }
 
         //Actualizo el estado del turno
-        turnoRepository.save(turno);
+        Turno guardado = turnoRepository.save(turno);
+        return TurnoMapper.toResponse(guardado);
     }
 
     //Crea una lista con todos los horarios posibles
