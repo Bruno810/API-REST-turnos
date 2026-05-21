@@ -1,7 +1,10 @@
 package com.bruno.turnosapi.service;
 
+import com.bruno.turnosapi.dto.TurnoRequest;
+import com.bruno.turnosapi.dto.TurnoResponse;
 import com.bruno.turnosapi.exception.BusinessException;
 import com.bruno.turnosapi.exception.ResourceNotFoundException;
+import com.bruno.turnosapi.mapper.TurnoMapper;
 import com.bruno.turnosapi.model.EstadoTurno;
 import com.bruno.turnosapi.model.Turno;
 import com.bruno.turnosapi.repository.MedicoRepository;
@@ -10,6 +13,7 @@ import com.bruno.turnosapi.repository.TurnoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TurnoService {
@@ -24,7 +28,10 @@ public class TurnoService {
         this.pacienteRepository = pacienteRepository;
     }
 
-    public Turno crearTurno(Turno turno) {
+    public TurnoResponse crearTurno(TurnoRequest turnoReq) {
+
+        Turno turno = TurnoMapper.toEntity(turnoReq);
+
         //Primero me fijo si tanto paciente como médico existen en mi base de datos
         Long idMedico = turno.getMedico().getId();
         medicoRepository.findById(idMedico).orElseThrow(() -> new ResourceNotFoundException("Medico no encontrado"));
@@ -42,17 +49,23 @@ public class TurnoService {
         turno.setEstado(EstadoTurno.PENDIENTE);
 
         //Guardo y devuelvo el turno
-        return turnoRepository.save(turno);
+        Turno turnoGuardado =  turnoRepository.save(turno);
+        return TurnoMapper.toResponse(turnoGuardado);
     }
 
     //Devuelve todos los turnos registrados
-    public List<Turno> obtenerTurnos(){
-        return turnoRepository.findAll();
+    public List<TurnoResponse> obtenerTurnos(){
+        return turnoRepository.findAll().stream().map(TurnoMapper::toResponse).collect(Collectors.toList());
+    }
+
+    private Turno buscarEntidadPorId(Long id){
+        return turnoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Turno no encontrado"));
     }
 
     //Busca si el id del turno existe, si no, devuelve una excepción
-    public Turno buscarPorId(Long id){
-        return turnoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Turno no encontrado"));
+    public TurnoResponse buscarPorId(Long id){
+        Turno turno =  buscarEntidadPorId(id);
+        return TurnoMapper.toResponse(turno);
     }
 
     public void eliminarTurno(Long id){
@@ -61,7 +74,7 @@ public class TurnoService {
     }
 
     public void cambiarEstado(EstadoTurno estado, Long id){
-        Turno turno = buscarPorId(id);
+        Turno turno = buscarEntidadPorId(id);
         EstadoTurno estadoActual = turno.getEstado();
 
         //Me fijo si se puede cambiar el estado de un turno

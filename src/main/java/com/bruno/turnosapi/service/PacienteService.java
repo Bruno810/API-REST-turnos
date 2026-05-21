@@ -1,11 +1,15 @@
 package com.bruno.turnosapi.service;
 
+import com.bruno.turnosapi.dto.PacienteRequest;
+import com.bruno.turnosapi.dto.PacienteResponse;
 import com.bruno.turnosapi.exception.ResourceNotFoundException;
+import com.bruno.turnosapi.mapper.PacienteMapper;
 import com.bruno.turnosapi.model.Paciente;
 import com.bruno.turnosapi.repository.PacienteRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PacienteService {
@@ -17,24 +21,27 @@ public class PacienteService {
     }
 
     //Devuelve todos los pacientes registrados
-    public List<Paciente> allPacientes() {
-        return pacienteRepository.findAll();
+    public List<PacienteResponse> allPacientes() {
+        return pacienteRepository.findAll().stream().map(PacienteMapper::toResponse).collect(Collectors.toList());
     }
 
     //Busca si el id del paciente existe, si no, devuelve una excepción
-    public Paciente buscarPorId(Long id) {
-        return pacienteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Paciente no encontrado"));
+    public PacienteResponse buscarPorId(Long id) {
+        return pacienteRepository.findById(id).map(PacienteMapper::toResponse).orElseThrow(() -> new ResourceNotFoundException("Paciente no encontrado"));
     }
 
-    public Paciente guardarPaciente(Paciente paciente) {
-        return pacienteRepository.save(paciente);
+    public PacienteResponse guardarPaciente(PacienteRequest paciente) {
+        Paciente paciente1 = PacienteMapper.toEntity(paciente);
+        Paciente pacienteGuardado = pacienteRepository.save(paciente1);
+        return PacienteMapper.toResponse(pacienteGuardado);
     }
 
-    public void actualizarPaciente(Long id, Paciente paciente) {
+    public void actualizarPaciente(Long id, PacienteRequest paciente) {
         //Primero se fija si el paciente existe para luego actualizarlo
         buscarPorId(id);
-        paciente.setId(id);
-        pacienteRepository.save(paciente);
+        Paciente paciente1 = PacienteMapper.toEntity(paciente);
+        paciente1.setId(id);
+        pacienteRepository.save(paciente1);
     }
 
     public void eliminarPaciente(Long id) {

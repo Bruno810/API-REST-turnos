@@ -1,11 +1,15 @@
 package com.bruno.turnosapi.service;
 
+import com.bruno.turnosapi.dto.MedicoRequest;
+import com.bruno.turnosapi.dto.MedicoResponse;
 import com.bruno.turnosapi.exception.ResourceNotFoundException;
+import com.bruno.turnosapi.mapper.MedicoMapper;
 import com.bruno.turnosapi.model.Medico;
 import com.bruno.turnosapi.repository.MedicoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MedicoService {
@@ -17,24 +21,27 @@ public class MedicoService {
     }
 
     //Devuelve todos los medicos registrados
-    public List<Medico> allMedicos(){
-        return medicoRepository.findAll();
+    public List<MedicoResponse> allMedicos(){
+        return medicoRepository.findAll().stream().map(MedicoMapper::toResponse).collect(Collectors.toList());
     }
 
     //Busca si el id del medico existe, si no, devuelve una excepción
-    public Medico buscarPorId(Long id) {
-        return medicoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Medico no encontrado"));
+    public MedicoResponse buscarPorId(Long id) {
+        return medicoRepository.findById(id).map(MedicoMapper::toResponse).orElseThrow(() -> new ResourceNotFoundException("Medico no encontrado"));
     }
 
-    public Medico guardarMedico(Medico medico){
-        return medicoRepository.save(medico);
+    public MedicoResponse guardarMedico(MedicoRequest medico){
+        Medico medico1 = MedicoMapper.toEntity(medico);
+        Medico medicoGuardado = medicoRepository.save(medico1);
+        return MedicoMapper.toResponse(medicoGuardado);
     }
 
-    public void actualizarMedico(Long id, Medico medico){
+    public void actualizarMedico(Long id, MedicoRequest medico){
         //Primero se fija si el médico existe para luego actualizarlo
         buscarPorId(id);
-        medico.setId(id);
-        medicoRepository.save(medico);
+        Medico medico1 = MedicoMapper.toEntity(medico);
+        medico1.setId(id);
+        medicoRepository.save(medico1);
     }
 
     public void eliminarMedico(Long id){
