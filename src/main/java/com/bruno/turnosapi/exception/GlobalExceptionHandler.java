@@ -38,6 +38,6 @@ public class GlobalExceptionHandler{
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse("El formato de los datos enviados no es válido. Verificá que la hora tenga formato HH:mm:ss y la fecha YYYY-MM-DD", HttpStatus.BAD_REQUEST.value()));
+                .body(new ErrorResponse("El formato de los datos enviados no es válido.", HttpStatus.BAD_REQUEST.value()));
     }
 }
