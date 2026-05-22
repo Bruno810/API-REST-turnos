@@ -2,10 +2,12 @@ package com.bruno.turnosapi.service;
 
 import com.bruno.turnosapi.dto.MedicoRequest;
 import com.bruno.turnosapi.dto.MedicoResponse;
+import com.bruno.turnosapi.exception.BusinessException;
 import com.bruno.turnosapi.exception.ResourceNotFoundException;
 import com.bruno.turnosapi.mapper.MedicoMapper;
 import com.bruno.turnosapi.model.Medico;
 import com.bruno.turnosapi.repository.MedicoRepository;
+import com.bruno.turnosapi.repository.TurnoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.List;
 public class MedicoService {
 
     private final MedicoRepository medicoRepository;
+    private final TurnoRepository turnoRepository;
 
-    public MedicoService(MedicoRepository medicoRepository) {
+    public MedicoService(MedicoRepository medicoRepository, TurnoRepository turnoRepository) {
         this.medicoRepository = medicoRepository;
+        this.turnoRepository = turnoRepository;
     }
 
     //Devuelve todos los medicos registrados
@@ -46,6 +50,9 @@ public class MedicoService {
 
     public void eliminarMedico(Long id){
         buscarPorId(id);
+        if(turnoRepository.existsByMedicoId(id)){
+            throw new BusinessException("No se puede eliminar el medico porque tiene turnos asociados");
+        }
         medicoRepository.deleteById(id);
     }
 }
