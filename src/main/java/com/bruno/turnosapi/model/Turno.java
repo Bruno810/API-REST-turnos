@@ -25,14 +25,15 @@ public class Turno {
     @Column(nullable = false)
     private LocalTime hora;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EstadoTurno estado;
 
     @ManyToOne
-    @JoinColumn(name = "medico_id")
+    @JoinColumn(name = "medico_id", nullable = false)
     private Medico medico;
 
     @ManyToOne
-    @JoinColumn(name = "paciente_id")
+    @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 }
