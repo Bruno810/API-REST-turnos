@@ -22,6 +22,8 @@ cd turnos-api
 
 La API queda disponible en `http://localhost:8080`.
 
+Para probar los endpoints se recomienda usar Postman o cualquier cliente HTTP.
+
 Para explorar la base de datos en tiempo real: `http://localhost:8080/h2-console`
 - JDBC URL: `jdbc:h2:mem:turnosdb`
 - Usuario: `sa`
