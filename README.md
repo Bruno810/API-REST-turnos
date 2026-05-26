@@ -11,6 +11,7 @@ API REST para la gestión de turnos médicos desarrollada con Spring Boot. Permi
 - Maven
 - Lombok
 - Bean Validation
+- Swagger / OpenAPI (springdoc)
 
 ## Cómo correr el proyecto
 
@@ -22,7 +23,7 @@ cd turnos-api
 
 La API queda disponible en `http://localhost:8080`.
 
-Para probar los endpoints se recomienda usar Postman o cualquier cliente HTTP.
+Documentación interactiva disponible en: http://localhost:8080/swagger-ui/index.html
 
 Para explorar la base de datos en tiempo real: `http://localhost:8080/h2-console`
 - JDBC URL: `jdbc:h2:mem:turnosdb`
