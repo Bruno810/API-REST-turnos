@@ -39,6 +39,11 @@ public class TurnoService {
             throw new BusinessException("Los turnos solo se pueden agendar en intervalos de 15 minutos");
         }
 
+        //Me fijo si el horario en el que se pide es entre las 9 y las 18
+        if (turno.getHora().isBefore(LocalTime.of(9, 0)) || turno.getHora().isAfter(LocalTime.of(18, 0))) {
+            throw new BusinessException("Los turnos solo se pueden agendar entre las 09:00 y las 18:00");
+        }
+
         //Primero me fijo si tanto paciente como médico existen en mi base de datos
         Long idMedico = turno.getMedico().getId();
         medicoRepository.findById(idMedico).orElseThrow(() -> new ResourceNotFoundException("Medico no encontrado"));
